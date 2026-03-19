@@ -67,6 +67,7 @@ h1 {
   margin-bottom: 0.5rem;
   background: linear-gradient(135deg, var(--accent-neon), #fff);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
   display: inline-block;
 }
@@ -80,63 +81,7 @@ h1 {
   margin-bottom: 2rem;
 }
 
-.upload-section {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 1rem;
-}
-
-.upload-btn {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  background: rgba(255, 255, 255, 0.05);
-  padding: 14px 28px;
-  border-radius: 12px;
-  border: 1px solid var(--border-color);
-  cursor: pointer;
-  letter-spacing: 1px;
-  font-weight: 600;
-  text-transform: uppercase;
-  font-size: 0.9rem;
-  transition: all 0.3s ease;
-  color: var(--text-main);
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-}
-
-.upload-btn:hover {
-  background: rgba(0, 240, 255, 0.1);
-  border-color: var(--accent-neon);
-  box-shadow: 0 0 25px rgba(0, 240, 255, 0.3);
-  transform: translateY(-2px);
-}
-
-.upload-btn svg {
-  width: 20px;
-  height: 20px;
-  color: var(--accent-neon);
-}
-
-.student-info {
-  display: flex;
-  justify-content: center;
-  margin-top: 10px;
-}
-
-.badge {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid var(--accent-neon);
-  color: var(--accent-neon);
-  padding: 6px 20px;
-  border-radius: 50px;
-  font-size: 0.9rem;
-  font-weight: 600;
-  box-shadow: 0 0 15px rgba(0, 240, 255, 0.2);
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
-
-/* Visualizer Grid */
+/* Visualizer Grid Re-added */
 .visualizer-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
@@ -162,8 +107,40 @@ h1 {
 .card-header {
   display: flex;
   align-items: center;
-  gap: 12px;
+  justify-content: space-between;
   margin-bottom: 1rem;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.add-video-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.05);
+  transition: all 0.2s ease;
+  color: var(--text-dim);
+}
+
+.add-video-btn:hover {
+  border-color: var(--accent-neon);
+  color: var(--accent-neon);
+  box-shadow: 0 0 10px rgba(0, 240, 255, 0.3);
+  background: rgba(0, 240, 255, 0.05);
+}
+
+.add-video-btn svg {
+  width: 18px;
+  height: 18px;
 }
 
 .status-dot {
@@ -276,6 +253,7 @@ footer {
 /* Modern Range Input */
 input[type=range] {
   -webkit-appearance: none;
+  appearance: none;
   width: 200px;
   background: transparent;
 }

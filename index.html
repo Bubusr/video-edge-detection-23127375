@@ -15,26 +15,27 @@
         <header>
             <h1 class="glitch-text" data-text="EdgeCanvas">EdgeCanvas</h1>
             <p class="subtitle">HTML5 Canvas & Video Processing Demo</p>
-            <div class="upload-section">
-                <input type="file" id="videoUpload" accept="video/*" hidden>
-                <label for="videoUpload" class="upload-btn">
-                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M12 16V8M12 8L9 11M12 8L15 11M4 16V17C4 18.1046 4.89543 19 6 19H18C19.1046 19 20 18.1046 20 17V16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                    Select Video File
-                </label>
-            </div>
         </header>
 
         <section class="visualizer-grid">
             <div class="visual-card video-card">
                 <div class="card-header">
-                    <span class="status-dot"></span>
-                    <span class="label">Original Stream</span>
+                    <div class="header-left">
+                        <span class="status-dot"></span>
+                        <span class="label">Original Stream</span>
+                    </div>
+                    <div class="header-right">
+                        <input type="file" id="videoUpload" accept="video/*" hidden>
+                        <label for="videoUpload" class="add-video-btn" title="Upload Custom Video">
+                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </label>
+                    </div>
                 </div>
                 <div class="video-wrapper">
-                    <video id="sourceVideo" crossorigin="anonymous" playsinline muted>
-                         <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
+                    <video id="sourceVideo" crossorigin="anonymous" playsinline muted loop>
+                        <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
                         Your browser does not support the video tag.
                     </video>
                     <div class="video-overlay">
