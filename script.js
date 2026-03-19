@@ -5,11 +5,28 @@ document.addEventListener('DOMContentLoaded', () => {
     const playBtn = document.getElementById('playBtn');
     const fpsDisplay = document.getElementById('fps');
     const thresholdInput = document.getElementById('threshold');
+    const videoUpload = document.getElementById('videoUpload');
     
     let isPlaying = false;
     let frameCount = 0;
     let lastTime = performance.now();
     let animationId = null;
+
+    // Handle video upload
+    videoUpload.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            const videoURL = URL.createObjectURL(file);
+            video.src = videoURL;
+            video.load();
+            playBtn.style.opacity = '1';
+            playBtn.style.pointerEvents = 'auto';
+            if (animationId) {
+                cancelAnimationFrame(animationId);
+                animationId = null;
+            }
+        }
+    });
 
     // Sobel Kernels
     const Kx = [
