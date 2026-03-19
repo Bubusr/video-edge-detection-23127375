@@ -26,10 +26,19 @@ document.addEventListener('DOMContentLoaded', () => {
     const hiddenCanvas = document.createElement('canvas');
     const hctx = hiddenCanvas.getContext('2d', { willReadFrequently: true });
     
+    /**
+     * Thuật toán Edge Detection (Sobel Operator) tự triển khai
+     * Không sử dụng bất kỳ thư viện bên ngoài nào (OpenCV, v.v.)
+     * 
+     * Nguyên lý:
+     * 1. Duyệt qua từng pixel của frame video
+     * 2. Áp dụng ma trận Kernel 3x3 (Sobel) để tính đạo hàm theo trục X và Y
+     * 3. Tính độ lớn gradient để tìm biên cạnh
+     */
     function applyEdgeDetection() {
         if (video.paused || video.ended) return;
 
-        // Ensure canvas dimensions match video
+        // Đảm bảo kích thước canvas khớp với video thực tế
         if (canvas.width !== video.offsetWidth || canvas.height !== video.offsetHeight) {
             canvas.width = video.offsetWidth;
             canvas.height = video.offsetHeight;
@@ -38,8 +47,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const width = canvas.width;
         const height = canvas.height;
 
-        // For performance, we'll process at a lower resolution and scale up for display
-        const procWidth = Math.min(width, 480);
+        // Tối ưu hiệu suất: Xử lý ở độ phân giải thấp hơn (max 640px rộng) 
+        // sau đó scale lên để hiển thị nhằm đảm bảo đạt 30-60 FPS
+        const procWidth = Math.min(width, 640);
         const procHeight = Math.floor(procWidth * (height / width));
 
         if (hiddenCanvas.width !== procWidth || hiddenCanvas.height !== procHeight) {
@@ -47,41 +57,55 @@ document.addEventListener('DOMContentLoaded', () => {
             hiddenCanvas.height = procHeight;
         }
 
-        // Draw current video frame to hidden canvas (resized)
+        // Bước 1: Trích xuất frame từ video lên hidden canvas
         hctx.drawImage(video, 0, 0, procWidth, procHeight);
 
-        // Get image data from hidden canvas
+        // Bước 2: Lấy dữ liệu pixel thô (Raw Image Data)
         const imageData = hctx.getImageData(0, 0, procWidth, procHeight);
         const data = imageData.data;
         const output = hctx.createImageData(procWidth, procHeight);
         const outData = output.data;
         const threshold = parseInt(thresholdInput.value, 10);
 
-        // Optimized Sobel loop
+        // Bước 3: Thuật toán Sobel lặp qua từng pixel (bỏ qua biên ngoài cùng)
         for (let y = 1; y < procHeight - 1; y++) {
             for (let x = 1; x < procWidth - 1; x++) {
-                const idx = (y * procWidth + x) * 4;
+                let pixelX = 0;
+                let pixelY = 0;
+
+                // Ma trận Sobel 3x3:
+                // Kx = [-1, 0, 1, -2, 0, 2, -1, 0, 1]
+                // Ky = [-1, -2, -1, 0, 0, 0, 1, 2, 1]
                 
-                // Sobel approximation: Simplified
-                const i_top = ((y-1)*procWidth + x)*4;
-                const i_bot = ((y+1)*procWidth + x)*4;
-                const i_left = (y*procWidth + (x-1))*4;
-                const i_right = (y*procWidth + (x+1))*4;
+                // Hàng -1
+                for (let ky = -1; ky <= 1; ky++) {
+                    const rowOffset = (y + ky) * procWidth;
+                    for (let kx = -1; kx <= 1; kx++) {
+                        const idx = (rowOffset + (x + kx)) * 4;
+                        
+                        // Chuyển sang Grayscale (độ sáng trung bình) để xử lý
+                        const gray = (data[idx] + data[idx+1] + data[idx+2]) / 3;
+                        
+                        // Áp dụng trọng số Kernel Sobel trực tiếp (đã tối ưu hóa)
+                        // Ma trận X: [[-1, 0, 1], [-2, 0, 2], [-1, 0, 1]]
+                        // Ma trận Y: [[-1, -2, -1], [0, 0, 0], [1, 2, 1]]
+                        pixelX += gray * Kx[ky + 1][kx + 1];
+                        pixelY += gray * Ky[ky + 1][kx + 1];
+                    }
+                }
 
-                const gx = (data[i_right] + data[i_right+1] + data[i_right+2]) - 
-                           (data[i_left] + data[i_left+1] + data[i_left+2]);
-                const gy = (data[i_bot] + data[i_bot+1] + data[i_bot+2]) - 
-                           (data[i_top] + data[i_top+1] + data[i_top+2]);
+                // Tính độ lớn Gradient (Pitago)
+                const magnitude = Math.sqrt(pixelX * pixelX + pixelY * pixelY);
+                const idx = (y * procWidth + x) * 4;
 
-                const mag = Math.abs(gx) + Math.abs(gy);
-
-                if (mag > threshold) {
-                    outData[idx] = 0;           // R (Neon Cyan)
-                    outData[idx + 1] = 240;     // G
-                    outData[idx + 2] = 255;     // B
-                    outData[idx + 3] = 255;     // A
+                // Bước 4: Phân ngưỡng (Thresholding) để hiển thị biên cạnh
+                if (magnitude > threshold) {
+                    outData[idx]     = 0;   // Neon R
+                    outData[idx + 1] = 240; // Neon G
+                    outData[idx + 2] = 255; // Neon B
+                    outData[idx + 3] = 255; // Alpha
                 } else {
-                    outData[idx] = 0;
+                    outData[idx]     = 0;
                     outData[idx + 1] = 0;
                     outData[idx + 2] = 0;
                     outData[idx + 3] = 255;
@@ -89,14 +113,13 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
+        // Bước 5: Đổ ngược dữ liệu đã xử lý lên canvas
         hctx.putImageData(output, 0, 0);
 
-        // Scale processed data back to display canvas
-        ctx.clearRect(0, 0, width, height);
-        ctx.imageSmoothingEnabled = false; // Keep edges sharp
+        // Vẽ kết quả từ hidden canvas lên màn hình chính (scaled)
         ctx.drawImage(hiddenCanvas, 0, 0, width, height);
 
-        // FPS counter
+        // Cập nhật FPS counter
         frameCount++;
         const now = performance.now();
         if (now - lastTime >= 1000) {
