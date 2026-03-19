@@ -65,7 +65,7 @@ h1 {
 }
 
 .visual-card {
-  background: rgba(0, 0, 0, 0.2);
+  background: #0f172a;
   border-radius: 12px;
   border: 1px solid var(--border-color);
   padding: 1rem;
@@ -125,7 +125,7 @@ h1 {
 .add-video-btn:hover {
   border-color: var(--accent-blue);
   color: var(--accent-blue);
-  background: rgba(59, 130, 246, 0.1);
+  background: #1e293b;
 }
 
 .video-wrapper, .canvas-wrapper {
@@ -149,7 +149,7 @@ video, canvas {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(0, 0, 0, 0.5);
+  background: #000000;
   cursor: pointer;
 }
 
