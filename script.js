@@ -55,10 +55,10 @@ document.addEventListener('DOMContentLoaded', () => {
     function applyEdgeDetection() {
         if (video.paused || video.ended) return;
 
-        // Đảm bảo kích thước canvas khớp với video thực tế
-        if (canvas.width !== video.offsetWidth || canvas.height !== video.offsetHeight) {
-            canvas.width = video.offsetWidth;
-            canvas.height = video.offsetHeight;
+        // Đảm bảo kích thước canvas khớp với độ phân giải thực của video
+        if (canvas.width !== video.videoWidth || canvas.height !== video.videoHeight) {
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
         }
 
         const width = canvas.width;
