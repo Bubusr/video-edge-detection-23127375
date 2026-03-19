@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EdgeCanvas - Real-time Edge Detection</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Space+Grotesk:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="background-glow"></div>
+    <main class="container">
+        <header>
+            <h1 class="glitch-text" data-text="EdgeCanvas">EdgeCanvas</h1>
+            <p class="subtitle">HTML5 Canvas & Video Processing Demo</p>
+        </header>
+
+        <section class="visualizer-grid">
+            <div class="visual-card video-card">
+                <div class="card-header">
+                    <span class="status-dot"></span>
+                    <span class="label">Original Stream</span>
+                </div>
+                <div class="video-wrapper">
+                    <video id="sourceVideo" crossorigin="anonymous" playsinline muted>
+                         <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                    <div class="video-overlay">
+                        <button id="playBtn" class="play-button">
+                             <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M8 5V19L19 12L8 5Z" fill="currentColor"/>
+                             </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="visual-card canvas-card">
+                <div class="card-header">
+                    <span class="status-dot edge"></span>
+                    <span class="label">Edge Detection Out</span>
+                </div>
+                <div class="canvas-wrapper">
+                    <canvas id="edgeCanvas"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <div class="info">
+                <p>Processing at <span id="fps">0</span> FPS</p>
+            </div>
+            <div class="controls">
+                <label for="threshold">Edge Threshold</label>
+                <input type="range" id="threshold" min="30" max="255" value="100">
+            </div>
+        </footer>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
