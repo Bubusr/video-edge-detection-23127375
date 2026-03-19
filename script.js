@@ -117,9 +117,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 // Bước 4: Phân ngưỡng (Thresholding) để hiển thị biên cạnh
                 if (magnitude > threshold) {
-                    outData[idx]     = 0;   // Neon R
-                    outData[idx + 1] = 240; // Neon G
-                    outData[idx + 2] = 255; // Neon B
+                    outData[idx]     = 255; // White
+                    outData[idx + 1] = 255; 
+                    outData[idx + 2] = 255; 
                     outData[idx + 3] = 255; // Alpha
                 } else {
                     outData[idx]     = 0;
